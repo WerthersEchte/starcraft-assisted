@@ -64,6 +64,9 @@ public class BotKern extends DefaultBWListener {
     @Override
     public void onFrame() {
     	try{
+    		
+    		long vStartZeitFrame = System.nanoTime();
+    		
     		Anzeige.anzeigen();
     	
     		Einheiten.mineralienSammeln();
@@ -71,6 +74,13 @@ public class BotKern extends DefaultBWListener {
     		Gebaeude.produziereEinheiten();
     		Gebaeude.erforsche();
     		Gebaeude.expandiere();
+    		
+    		long vEndZeitFrame = System.nanoTime();
+    		
+    		if( vEndZeitFrame-vStartZeitFrame > 5*1e6 ){
+    			System.out.println("Frame " + spiel().getFrameCount() + ": " +(vEndZeitFrame-vStartZeitFrame)/1e6 + " ms");
+    		}
+
     	}catch( Exception vException ){
     		vException.printStackTrace();
     	}
