@@ -31,6 +31,10 @@ public class Gebaeude {
 	
 	private static Map<UnitType, Integer> benoetigteEinheiten = new HashMap<>(); 
 	
+	public static boolean istInProduction( UnitType aEinheitentyp ){
+		return benoetigteEinheiten.containsKey(aEinheitentyp) && benoetigteEinheiten.get(aEinheitentyp) > 0;
+	}
+	
 	public static void braucheEinheiten(UnitType aEinheit, int aAnzahl){
 		benoetigteEinheiten.put(aEinheit, benoetigteEinheiten.getOrDefault( aEinheit, 0) + aAnzahl);
 	}
