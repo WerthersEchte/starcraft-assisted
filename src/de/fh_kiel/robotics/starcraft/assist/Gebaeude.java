@@ -108,19 +108,19 @@ public class Gebaeude {
 				
 				TilePosition vAusgangsPosition = vAusgangsPunkt.getTilePosition();
 				TilePosition vZielPosition = new TilePosition(vAusgangsPosition.getX(), vAusgangsPosition.getY()-1-aGebäudeTyp.tileHeight());
-				if( vBauer.build(aGebäudeTyp, vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) ){
+				if( sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
 					return true;
 				}
 				vZielPosition = new TilePosition(vAusgangsPosition.getX(), vAusgangsPosition.getY()+vAusgangsPunkt.getType().tileHeight()+2);
-				if( vBauer.build(aGebäudeTyp, vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) ){
+				if( sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
 					return true;
 				}
 				vZielPosition = new TilePosition(vAusgangsPosition.getX()-1-aGebäudeTyp.tileWidth(), vAusgangsPosition.getY());
-				if( vBauer.build(aGebäudeTyp, vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) ){
+				if( sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
 					return true;
 				}
 				vZielPosition = new TilePosition(vAusgangsPosition.getX()+vAusgangsPunkt.getType().tileWidth()+2, vAusgangsPosition.getY());
-				if( vBauer.build(aGebäudeTyp, vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) ){
+				if( sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
 					return true;
 				}
 				
@@ -131,7 +131,7 @@ public class Gebaeude {
 	}
 	
 	private static boolean sindKeineResourcenInDerNähe( Position aPosition ){
-		for( Unit vEinheit : BotKern.spiel().getUnitsInRadius(aPosition, 300)){
+		for( Unit vEinheit : BotKern.spiel().getUnitsInRadius(aPosition, 3*32)){
 			if( vEinheit.getType().isMineralField() || vEinheit.getType() == UnitType.Resource_Vespene_Geyser || vEinheit.getType() == BotKern.selbst().getRace().getRefinery() ){
 				return false;
 			}
