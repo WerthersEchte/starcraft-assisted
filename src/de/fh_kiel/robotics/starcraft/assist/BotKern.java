@@ -36,6 +36,9 @@ public class BotKern extends DefaultBWListener {
     	aBefehl = EingabeVerarbeitung.sammeln(aBefehl);
     	aBefehl = EingabeVerarbeitung.angreifen(aBefehl);
     	aBefehl = EingabeVerarbeitung.expandieren(aBefehl);
+
+    	aBefehl = EingabeVerarbeitung.toggleAnzeigen(aBefehl);
+    	aBefehl = EingabeVerarbeitung.resetAll(aBefehl);
     	
     	if( !aBefehl.isEmpty() ){
     		spiel().sendText(aBefehl);
@@ -49,6 +52,9 @@ public class BotKern extends DefaultBWListener {
     
     @Override
     public void onStart() {
+		Anzeige.reset();
+		Gebaeude.reset();
+    	
         mSpiel = mirror.getGame();
         mSelbst = mSpiel.self();
 
@@ -79,6 +85,13 @@ public class BotKern extends DefaultBWListener {
     		
     		if( vEndZeitFrame-vStartZeitFrame > 5*1e6 ){
     			System.out.println("Frame " + spiel().getFrameCount() + ": " +(vEndZeitFrame-vStartZeitFrame)/1e6 + " ms");
+    		}
+    		if( vEndZeitFrame-vStartZeitFrame > 40*1e6 ){
+    			if( Anzeige.sBildschirmAusgabe ){
+    				Anzeige.sBildschirmAusgabe = false;
+    			} else if( Anzeige.sGeländeAusgabe ) {
+    				Anzeige.sGeländeAusgabe = false;
+    			}
     		}
 
     	}catch( Exception vException ){

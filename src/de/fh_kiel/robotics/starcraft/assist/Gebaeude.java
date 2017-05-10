@@ -16,6 +16,19 @@ import bwta.BaseLocation;
 
 public class Gebaeude {
 	
+	public static void reset(){
+		
+		benoetigteEinheiten.clear();
+		benoetigteTechs.clear();
+		benoetigteUpgrades.clear();
+		mLetzterFrameMitGebauterEinheit = 0;
+		
+		mBaumeister = null;
+		mExpansionswunsch = false;
+		
+		
+	}
+	
 	private static Map<UnitType, Integer> benoetigteEinheiten = new HashMap<>(); 
 	
 	public static void braucheEinheiten(UnitType aEinheit, int aAnzahl){

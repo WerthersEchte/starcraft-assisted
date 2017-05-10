@@ -143,5 +143,15 @@ public class EingabeVerarbeitung {
 		}
 		return aBefehl;
 	}
+	
+	public static String resetAll( String aBefehl ){
+		if( aBefehl.equalsIgnoreCase("reset") ){
+			// Anzeige
+			Anzeige.reset();
+			Gebaeude.reset();
+			return "";
+		}
+		return aBefehl;
+	}
 
 }

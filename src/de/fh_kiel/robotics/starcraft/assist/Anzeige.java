@@ -40,6 +40,17 @@ public class Anzeige {
     	
     	sammelpunktAnzeigen();
 	}
+	
+	public static void reset(){
+
+		sBildschirmAusgabe = true;
+		sGeländeAusgabe = true;
+		sMinMaxOfRegion.clear();
+		sAllTechs.clear();
+		sAllUpgrades.clear();
+		sAllUnits.clear();
+		
+	}
 
 	private static void informationenAnzeigen() {
 		BotKern.spiel().setTextSize(bwapi.Text.Size.Enum.Small);
