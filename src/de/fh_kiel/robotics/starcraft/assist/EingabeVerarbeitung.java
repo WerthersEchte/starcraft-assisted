@@ -131,5 +131,17 @@ public class EingabeVerarbeitung {
 		}
 		return aBefehl;
 	}
+	
+	public static String toggleAnzeigen( String aBefehl ){
+		switch(aBefehl.toLowerCase()){
+		case "anzeige":
+			Anzeige.sBildschirmAusgabe = !Anzeige.sBildschirmAusgabe;
+			return "";
+		case "gelaende":
+			Anzeige.sGeländeAusgabe = !Anzeige.sGeländeAusgabe;
+			return "";
+		}
+		return aBefehl;
+	}
 
 }

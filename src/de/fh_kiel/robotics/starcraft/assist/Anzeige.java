@@ -23,16 +23,22 @@ import bwta.BaseLocation;
 import bwta.Region;
 
 public class Anzeige {
+
+	public static boolean sBildschirmAusgabe = true;
+	public static boolean sGeländeAusgabe = true;
 	
 	public static void anzeigen() {
+		if( sBildschirmAusgabe ){
+			informationenAnzeigen();
+			
+	    	möglicheEinheitenGebäudeUndForschung();
+		}
 		
-    	informationenAnzeigen();
-		
-    	gelaendeAnzeigen();
+		if( sGeländeAusgabe ){
+			gelaendeAnzeigen();
+		}
     	
     	sammelpunktAnzeigen();
-		
-    	möglicheEinheitenGebäudeUndForschung();
 	}
 
 	private static void informationenAnzeigen() {
