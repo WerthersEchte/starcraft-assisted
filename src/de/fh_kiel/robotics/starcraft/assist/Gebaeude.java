@@ -39,6 +39,12 @@ public class Gebaeude {
 		benoetigteEinheiten.put(aEinheit, benoetigteEinheiten.getOrDefault( aEinheit, 0) + aAnzahl);
 	}
 	
+	public static void einheitErstellt( UnitType vEinheit ){
+		if( istInProduction( vEinheit ) ){
+			benoetigteEinheiten.put(vEinheit, benoetigteEinheiten.getOrDefault(vEinheit, 0) - 1);
+		}
+	}
+	
 	private static int mLetzterFrameMitGebauterEinheit = 0;
 	public static void produziereEinheiten(){
 		if( mLetzterFrameMitGebauterEinheit + 3 >= BotKern.spiel().getFrameCount() ){
@@ -47,12 +53,10 @@ public class Gebaeude {
 		for(UnitType benoetigteEinheit : benoetigteEinheiten.keySet()){
 			if( benoetigteEinheiten.getOrDefault(benoetigteEinheit, 0) > 0){
 				if(produziereEinheit(benoetigteEinheit)){
-					benoetigteEinheiten.put(benoetigteEinheit, benoetigteEinheiten.getOrDefault(benoetigteEinheit, 0) - 1);
 					mLetzterFrameMitGebauterEinheit = BotKern.spiel().getFrameCount();
 					return;
 				}
 				if(baueGebäude(benoetigteEinheit)){
-					benoetigteEinheiten.put(benoetigteEinheit, benoetigteEinheiten.getOrDefault(benoetigteEinheit, 0) - 1);
 					mLetzterFrameMitGebauterEinheit = BotKern.spiel().getFrameCount();
 					return;
 				}
@@ -103,22 +107,36 @@ public class Gebaeude {
 			if( vAusgangsPunkt.getType().isBuilding() ){
 				
 				TilePosition vAusgangsPosition = vAusgangsPunkt.getTilePosition();
-				if( vBauer.build(aGebäudeTyp, new TilePosition(vAusgangsPosition.getX(), vAusgangsPosition.getY()-1-aGebäudeTyp.tileHeight())) ){
+				TilePosition vZielPosition = new TilePosition(vAusgangsPosition.getX(), vAusgangsPosition.getY()-1-aGebäudeTyp.tileHeight());
+				if( vBauer.build(aGebäudeTyp, vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) ){
 					return true;
 				}
-				if( vBauer.build(aGebäudeTyp, new TilePosition(vAusgangsPosition.getX(), vAusgangsPosition.getY()+1+1)) ){
+				vZielPosition = new TilePosition(vAusgangsPosition.getX(), vAusgangsPosition.getY()+vAusgangsPunkt.getType().tileHeight()+2);
+				if( vBauer.build(aGebäudeTyp, vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) ){
 					return true;
 				}
-				if( vBauer.build(aGebäudeTyp, new TilePosition(vAusgangsPosition.getX()-1-aGebäudeTyp.tileWidth(), vAusgangsPosition.getY())) ){
+				vZielPosition = new TilePosition(vAusgangsPosition.getX()-1-aGebäudeTyp.tileWidth(), vAusgangsPosition.getY());
+				if( vBauer.build(aGebäudeTyp, vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) ){
 					return true;
 				}
-				if( vBauer.build(aGebäudeTyp, new TilePosition(vAusgangsPosition.getX()+1+1, vAusgangsPosition.getY())) ){
+				vZielPosition = new TilePosition(vAusgangsPosition.getX()+vAusgangsPunkt.getType().tileWidth()+2, vAusgangsPosition.getY());
+				if( vBauer.build(aGebäudeTyp, vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) ){
 					return true;
 				}
+				
 			}
 		}
 		
 		return false;
+	}
+	
+	private static boolean sindKeineResourcenInDerNähe( Position aPosition ){
+		for( Unit vEinheit : BotKern.spiel().getUnitsInRadius(aPosition, 300)){
+			if( vEinheit.getType().isMineralField() || vEinheit.getType() == UnitType.Resource_Vespene_Geyser || vEinheit.getType() == BotKern.selbst().getRace().getRefinery() ){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private static Position mSammelpunkt = Position.Unknown; 

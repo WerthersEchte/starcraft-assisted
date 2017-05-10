@@ -4,10 +4,12 @@ import bwapi.DefaultBWListener;
 import bwapi.Game;
 import bwapi.Mirror;
 import bwapi.Player;
+import bwapi.Position;
 import bwapi.Race;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwta.BWTA;
+import bwta.BaseLocation;
 
 public class BotKern extends DefaultBWListener {
 
@@ -27,6 +29,11 @@ public class BotKern extends DefaultBWListener {
     @Override
     public void onUnitComplete(Unit unit) {
     	Gebaeude.setzeSammelpunkt(Gebaeude.holeSammelpunkt());
+    }
+    
+    @Override
+    public void onUnitCreate(Unit unit) {
+    	Gebaeude.einheitErstellt(unit.getType());
     }
     
     @Override
@@ -153,11 +160,91 @@ public class BotKern extends DefaultBWListener {
 			Gebaeude.braucheEinheiten( mAttackUnit, 10);
 		}
 		
-		
+		if( selbst().allUnitCount(mAttackUnit) >= 10 || !spiel().enemy().getUnits().isEmpty() ){
+			angreifen();
+		}
 		
     }
+
+    private int mLastAttack = 0;
+    private Position vGegnerPosition = null;
+    
+	private void angreifen() {
+		if( mLastAttack + 50 > spiel().getFrameCount()){
+			return;
+		}
+		mLastAttack = spiel().getFrameCount();
+		
+		if( vGegnerPosition == null || spiel().isVisible(vGegnerPosition.toTilePosition()) && spiel().enemy().getUnits().isEmpty()){
+			if( !spiel().enemy().getUnits().isEmpty() ){
+				vGegnerPosition = spiel().enemy().getUnits().get(0).getPosition();		
+			} else {
+				
+				for( BaseLocation vBase : BWTA.getStartLocations() ){
+					
+					if( !spiel().isExplored(vBase.getTilePosition()) ){
+						vGegnerPosition = vBase.getPosition();
+						break;
+					}
+					
+				}
+				
+				if( vGegnerPosition == null ){
+					for( BaseLocation vBase : BWTA.getBaseLocations() ){
+						if( !spiel().isVisible(vBase.getTilePosition()) ){
+							vGegnerPosition = vBase.getPosition();
+							break;
+						}
+						
+					}
+				}			
+				
+			}
+		}
+		
+		for(Unit vEinheit : BotKern.selbst().getUnits()){
+			if( vEinheit.canMove() && !vEinheit.getType().isWorker() ){
+				vEinheit.attack( vGegnerPosition );
+			}
+		}
+		
+	}
 
 	public static void main(String[] args) {
         new BotKern().run();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
