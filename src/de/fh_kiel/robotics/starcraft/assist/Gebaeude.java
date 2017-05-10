@@ -1,7 +1,9 @@
 package de.fh_kiel.robotics.starcraft.assist;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bwapi.Position;
 import bwapi.TechType;
@@ -14,12 +16,10 @@ import bwta.BaseLocation;
 
 public class Gebaeude {
 	
-	private static List<UnitType> benoetigteEinheiten = new ArrayList<>(); 
+	private static Map<UnitType, Integer> benoetigteEinheiten = new HashMap<>(); 
 	
 	public static void braucheEinheiten(UnitType aEinheit, int aAnzahl){
-		for(int i = 0 ; i<aAnzahl; i++){
-			benoetigteEinheiten.add(aEinheit);
-		}
+		benoetigteEinheiten.put(aEinheit, benoetigteEinheiten.getOrDefault( aEinheit, 0) + aAnzahl);
 	}
 	
 	private static int mLetzterFrameMitGebauterEinheit = 0;
@@ -27,16 +27,18 @@ public class Gebaeude {
 		if( mLetzterFrameMitGebauterEinheit + 3 >= BotKern.spiel().getFrameCount() ){
 			return;
 		}
-		for(UnitType benoetigteEinheit : new ArrayList<>(benoetigteEinheiten)){
-			if(produziereEinheit(benoetigteEinheit)){
-				benoetigteEinheiten.remove(benoetigteEinheit);
-				mLetzterFrameMitGebauterEinheit = BotKern.spiel().getFrameCount();
-				return;
-			}
-			if(baueGebäude(benoetigteEinheit)){
-				benoetigteEinheiten.remove(benoetigteEinheit);
-				mLetzterFrameMitGebauterEinheit = BotKern.spiel().getFrameCount();
-				return;
+		for(UnitType benoetigteEinheit : benoetigteEinheiten.keySet()){
+			if( benoetigteEinheiten.getOrDefault(benoetigteEinheit, 0) > 0){
+				if(produziereEinheit(benoetigteEinheit)){
+					benoetigteEinheiten.put(benoetigteEinheit, benoetigteEinheiten.getOrDefault(benoetigteEinheit, 0) - 1);
+					mLetzterFrameMitGebauterEinheit = BotKern.spiel().getFrameCount();
+					return;
+				}
+				if(baueGebäude(benoetigteEinheit)){
+					benoetigteEinheiten.put(benoetigteEinheit, benoetigteEinheiten.getOrDefault(benoetigteEinheit, 0) - 1);
+					mLetzterFrameMitGebauterEinheit = BotKern.spiel().getFrameCount();
+					return;
+				}
 			}
 		}
 	}
