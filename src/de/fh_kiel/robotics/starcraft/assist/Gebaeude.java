@@ -150,7 +150,7 @@ public class Gebaeude {
 	private static Map<TilePosition, Integer> sPositionMitZukünftigemGebäude = new HashMap<>();
 	
 	private static boolean istPositionFrei( TilePosition aPosition ){
-		for( TilePosition vPosition : sPositionMitZukünftigemGebäude.keySet() ){
+		for( TilePosition vPosition : new ArrayList<>(sPositionMitZukünftigemGebäude.keySet()) ){
 			if( sPositionMitZukünftigemGebäude.get(vPosition) + 500 < Kern.spiel().getFrameCount() ){
 				sPositionMitZukünftigemGebäude.remove(vPosition);
 			}
