@@ -1,6 +1,7 @@
 package de.fh_kiel.robotics.starcraft.assist;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +104,10 @@ public class Gebaeude {
 			}
 		}
 		
-		for( Unit vAusgangsPunkt : Kern.selbst().getUnits() ){
+		List<Unit> vAlleEigenenEinheiten = new ArrayList<Unit>(Kern.selbst().getUnits());
+		Collections.shuffle(vAlleEigenenEinheiten);
+		
+		for( Unit vAusgangsPunkt : vAlleEigenenEinheiten ){
 			if( vAusgangsPunkt.getType().isBuilding() ){
 				
 				TilePosition vAusgangsPosition = vAusgangsPunkt.getTilePosition();
