@@ -162,4 +162,12 @@ public class EingabeVerarbeitung {
 		return aBefehl;
 	}
 
+	public static String fun(String aBefehl) {
+		if( aBefehl.equalsIgnoreCase("herz") ){
+			Fun.herz();
+			return "";
+		}
+		return aBefehl;
+	}
+
 }

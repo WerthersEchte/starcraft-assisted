@@ -48,8 +48,10 @@ public class Kern extends DefaultBWListener {
 
     	aBefehl = EingabeVerarbeitung.toggleAnzeigen(aBefehl);
     	aBefehl = EingabeVerarbeitung.resetAll(aBefehl);
-    	
+
     	aBefehl = EingabeVerarbeitung.toggleBot(aBefehl, this);
+
+    	aBefehl = EingabeVerarbeitung.fun(aBefehl);
     	
     	if( !aBefehl.isEmpty() ){
     		spiel().sendText(aBefehl);
@@ -92,6 +94,7 @@ public class Kern extends DefaultBWListener {
     		if( mExampleBot != null & mBotActive ){
     			mExampleBot.agiere();
     		}
+    		Fun.bauen();
     		
     		Anzeige.anzeigen();
     	

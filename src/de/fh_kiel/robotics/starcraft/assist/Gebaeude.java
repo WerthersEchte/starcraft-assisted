@@ -43,6 +43,7 @@ public class Gebaeude {
 	public static void einheitErstellt( UnitType vEinheit ){
 		if( istInProduction( vEinheit ) ){
 			benoetigteEinheiten.put(vEinheit, benoetigteEinheiten.getOrDefault(vEinheit, 0) - 1);
+			sGebäudeImBau.remove(vEinheit);
 		}
 	}
 	
@@ -59,6 +60,7 @@ public class Gebaeude {
 				}
 				if(baueGebäude(benoetigteEinheit)){
 					mLetzterFrameMitGebauterEinheit = Kern.spiel().getFrameCount();
+					sGebäudeImBau.put(benoetigteEinheit, Kern.spiel().getFrameCount());
 					return;
 				}
 			}
@@ -77,8 +79,9 @@ public class Gebaeude {
 		return false;
 	}
 	
+	private static Map<UnitType, Integer> sGebäudeImBau = new HashMap<>();
 	public static boolean baueGebäude( UnitType aGebäudeTyp ){
-		if( !aGebäudeTyp.isBuilding() || aGebäudeTyp.mineralPrice() > Kern.selbst().minerals() || aGebäudeTyp.gasPrice() > Kern.selbst().gas() ){
+		if( !aGebäudeTyp.isBuilding() || sGebäudeImBau.containsKey(aGebäudeTyp) && sGebäudeImBau.get(aGebäudeTyp) + 500 > Kern.spiel().getFrameCount() || aGebäudeTyp.mineralPrice() > Kern.selbst().minerals() || aGebäudeTyp.gasPrice() > Kern.selbst().gas() ){
 			return false;
 		}
 		
@@ -93,6 +96,7 @@ public class Gebaeude {
 		if( vBauer == null ){
 			return false;
 		}
+		
 		
 		if( aGebäudeTyp.isRefinery() ){
 			for( Unit vGeysir : Kern.spiel().neutral().getUnits()  ){
@@ -149,7 +153,7 @@ public class Gebaeude {
 	
 	private static Map<TilePosition, Integer> sPositionMitZukünftigemGebäude = new HashMap<>();
 	
-	private static boolean istPositionFrei( TilePosition aPosition ){
+	public static boolean istPositionFrei( TilePosition aPosition ){
 		for( TilePosition vPosition : new ArrayList<>(sPositionMitZukünftigemGebäude.keySet()) ){
 			if( sPositionMitZukünftigemGebäude.get(vPosition) + 500 < Kern.spiel().getFrameCount() ){
 				sPositionMitZukünftigemGebäude.remove(vPosition);
@@ -159,7 +163,7 @@ public class Gebaeude {
 		return !sPositionMitZukünftigemGebäude.keySet().stream().filter(position->Helfer.istGleich(position, aPosition)).findAny().isPresent();
 	}
 	
-	private static void zukünftigesGebäudeAn( UnitType aGebäude, TilePosition aPosition ){
+	public static void zukünftigesGebäudeAn( UnitType aGebäude, TilePosition aPosition ){
 		if( !aGebäude.isBuilding() || !aPosition.isValid()){
 			return;
 		}
