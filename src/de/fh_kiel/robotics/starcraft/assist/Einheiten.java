@@ -7,14 +7,14 @@ public class Einheiten {
 	
 	public static void mineralienSammeln(){
 		
-		for( Unit vEinheit : BotKern.selbst().getUnits() ){
+		for( Unit vEinheit : Kern.selbst().getUnits() ){
 			
 			if( vEinheit.getType().isWorker() &&
 				vEinheit.isIdle() &&
 				!vEinheit.isSelected() ){
 				
 				Unit vHauptGebaude = null;
-				for( Unit vPotenzialesHauptGebaude : BotKern.selbst().getUnits()){
+				for( Unit vPotenzialesHauptGebaude : Kern.selbst().getUnits()){
 					if( vPotenzialesHauptGebaude.getType().isResourceDepot() ){
 						if( vHauptGebaude == null || 
 							vHauptGebaude.getDistance(vEinheit) > vPotenzialesHauptGebaude.getDistance(vEinheit) ){
@@ -34,7 +34,7 @@ public class Einheiten {
 					
 				}
 				if( vMineralienKristall == null ){
-					for( Unit vPotenzialerMineralienKristall : BotKern.spiel().neutral().getUnits() ){
+					for( Unit vPotenzialerMineralienKristall : Kern.spiel().neutral().getUnits() ){
 						if( vPotenzialerMineralienKristall.getType().isMineralField() ){
 							if( vMineralienKristall == null || 
 									vMineralienKristall.getDistance(vEinheit) > vPotenzialerMineralienKristall.getDistance(vEinheit) ){

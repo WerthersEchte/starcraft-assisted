@@ -11,7 +11,7 @@ import bwapi.UnitType;
 import bwta.BWTA;
 import bwta.BaseLocation;
 
-public class BotKern extends DefaultBWListener {
+public class Kern extends DefaultBWListener {
 
 	private Mirror mirror = new Mirror();
 
@@ -49,6 +49,8 @@ public class BotKern extends DefaultBWListener {
     	aBefehl = EingabeVerarbeitung.toggleAnzeigen(aBefehl);
     	aBefehl = EingabeVerarbeitung.resetAll(aBefehl);
     	
+    	aBefehl = EingabeVerarbeitung.toggleBot(aBefehl, this);
+    	
     	if( !aBefehl.isEmpty() ){
     		spiel().sendText(aBefehl);
     	}
@@ -75,8 +77,11 @@ public class BotKern extends DefaultBWListener {
         
     	spiel().enableFlag(1);
     	
-    	defineRace();
+    	mExampleBot = new Bot();
     }
+    
+    private Bot mExampleBot;
+    public boolean mBotActive = false;
 
 	@Override
     public void onFrame() {
@@ -84,7 +89,9 @@ public class BotKern extends DefaultBWListener {
     		
     		long vStartZeitFrame = System.nanoTime();
     		
-    		realBot();
+    		if( mExampleBot != null & mBotActive ){
+    			mExampleBot.agiere();
+    		}
     		
     		Anzeige.anzeigen();
     	
@@ -112,106 +119,8 @@ public class BotKern extends DefaultBWListener {
     	}
     }
 
-    private void defineRace() {
-		
-		if( selbst().getRace() == Race.Zerg ){
-			mSupply = UnitType.Zerg_Overlord;
-			mProduction = UnitType.Zerg_Spawning_Pool;
-			mNumberOfProduction = 1;
-			mAttackUnit = UnitType.Zerg_Zergling;
-		}
-		if( selbst().getRace() == Race.Terran ){
-			mSupply = UnitType.Terran_Supply_Depot;
-			mProduction = UnitType.Terran_Barracks;
-			mAttackUnit = UnitType.Terran_Marine;
-		}
-		if( selbst().getRace() == Race.Protoss ){
-			mSupply = UnitType.Protoss_Pylon;
-			mProduction = UnitType.Protoss_Gateway;
-			mAttackUnit = UnitType.Protoss_Zealot;
-		}
-		
-	}
-
-    private UnitType mSupply = null;
-    private UnitType mProduction = null;
-    private int mNumberOfProduction = 4;
-    private UnitType mAttackUnit = null;
-    
-    private void realBot(){
-
-		if( !Gebaeude.istInProduction( selbst().getRace().getWorker() ) &&
-			 selbst().allUnitCount(selbst().getRace().getWorker()) < 70 ){ //TODO: Magic Number
-			Gebaeude.braucheEinheiten(selbst().getRace().getWorker(), 1);
-		}
-		
-		if( selbst().supplyTotal() - selbst().supplyUsed() < 8 ){
-			if( !Gebaeude.istInProduction(mSupply ) ){
-				Gebaeude.braucheEinheiten( mSupply, 1);
-			}
-		}
-
-		if( !Gebaeude.istInProduction( mProduction ) &&
-			selbst().allUnitCount( mProduction ) < mNumberOfProduction){
-			Gebaeude.braucheEinheiten( mProduction, 1);
-		}
-		
-		if( !Gebaeude.istInProduction( mAttackUnit )){
-			Gebaeude.braucheEinheiten( mAttackUnit, 10);
-		}
-		
-		if( selbst().allUnitCount(mAttackUnit) >= 10 || !spiel().enemy().getUnits().isEmpty() ){
-			angreifen();
-		}
-		
-    }
-
-    private int mLastAttack = 0;
-    private Position vGegnerPosition = null;
-    
-	private void angreifen() {
-		if( mLastAttack + 50 > spiel().getFrameCount()){
-			return;
-		}
-		mLastAttack = spiel().getFrameCount();
-		
-		if( vGegnerPosition == null || spiel().isVisible(vGegnerPosition.toTilePosition()) && spiel().enemy().getUnits().isEmpty()){
-			if( !spiel().enemy().getUnits().isEmpty() ){
-				vGegnerPosition = spiel().enemy().getUnits().get(0).getPosition();		
-			} else {
-				
-				for( BaseLocation vBase : BWTA.getStartLocations() ){
-					
-					if( !spiel().isExplored(vBase.getTilePosition()) ){
-						vGegnerPosition = vBase.getPosition();
-						break;
-					}
-					
-				}
-				
-				if( vGegnerPosition == null ){
-					for( BaseLocation vBase : BWTA.getBaseLocations() ){
-						if( !spiel().isVisible(vBase.getTilePosition()) ){
-							vGegnerPosition = vBase.getPosition();
-							break;
-						}
-						
-					}
-				}			
-				
-			}
-		}
-		
-		for(Unit vEinheit : BotKern.selbst().getUnits()){
-			if( vEinheit.canMove() && !vEinheit.getType().isWorker() ){
-				vEinheit.attack( vGegnerPosition );
-			}
-		}
-		
-	}
-
 	public static void main(String[] args) {
-        new BotKern().run();
+        new Kern().run();
     }
 }
 

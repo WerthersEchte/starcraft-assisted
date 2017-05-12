@@ -47,17 +47,17 @@ public class Gebaeude {
 	
 	private static int mLetzterFrameMitGebauterEinheit = 0;
 	public static void produziereEinheiten(){
-		if( mLetzterFrameMitGebauterEinheit + 3 >= BotKern.spiel().getFrameCount() ){
+		if( mLetzterFrameMitGebauterEinheit + 3 >= Kern.spiel().getFrameCount() ){
 			return;
 		}
 		for(UnitType benoetigteEinheit : benoetigteEinheiten.keySet()){
 			if( benoetigteEinheiten.getOrDefault(benoetigteEinheit, 0) > 0){
 				if(produziereEinheit(benoetigteEinheit)){
-					mLetzterFrameMitGebauterEinheit = BotKern.spiel().getFrameCount();
+					mLetzterFrameMitGebauterEinheit = Kern.spiel().getFrameCount();
 					return;
 				}
 				if(baueGebäude(benoetigteEinheit)){
-					mLetzterFrameMitGebauterEinheit = BotKern.spiel().getFrameCount();
+					mLetzterFrameMitGebauterEinheit = Kern.spiel().getFrameCount();
 					return;
 				}
 			}
@@ -65,11 +65,11 @@ public class Gebaeude {
 	}
 	
 	public static boolean produziereEinheit(UnitType aEinheitenTyp){
-		for(Unit vEinheit : BotKern.selbst().getUnits()){
+		for(Unit vEinheit : Kern.selbst().getUnits()){
 			if( vEinheit.isIdle() &&
 				vEinheit.canTrain(aEinheitenTyp) && 
-				aEinheitenTyp.gasPrice() <= BotKern.selbst().gas() &&  
-				aEinheitenTyp.mineralPrice() <= BotKern.selbst().minerals()){
+				aEinheitenTyp.gasPrice() <= Kern.selbst().gas() &&  
+				aEinheitenTyp.mineralPrice() <= Kern.selbst().minerals()){
 				return vEinheit.train(aEinheitenTyp);
 			}
 		}
@@ -77,12 +77,12 @@ public class Gebaeude {
 	}
 	
 	public static boolean baueGebäude( UnitType aGebäudeTyp ){
-		if( !aGebäudeTyp.isBuilding() || aGebäudeTyp.mineralPrice() > BotKern.selbst().minerals() || aGebäudeTyp.gasPrice() > BotKern.selbst().gas() ){
+		if( !aGebäudeTyp.isBuilding() || aGebäudeTyp.mineralPrice() > Kern.selbst().minerals() || aGebäudeTyp.gasPrice() > Kern.selbst().gas() ){
 			return false;
 		}
 		
 		Unit vBauer = null;
-		for( Unit vPotenzellerBauer : BotKern.selbst().getUnits() ){
+		for( Unit vPotenzellerBauer : Kern.selbst().getUnits() ){
 			if( vPotenzellerBauer.getType() == aGebäudeTyp.whatBuilds().first && (vPotenzellerBauer.isIdle() || vPotenzellerBauer.isGatheringMinerals()) ){
 				vBauer = vPotenzellerBauer;
 				break;
@@ -94,7 +94,7 @@ public class Gebaeude {
 		}
 		
 		if( aGebäudeTyp.isRefinery() ){
-			for( Unit vGeysir : BotKern.spiel().neutral().getUnits()  ){
+			for( Unit vGeysir : Kern.spiel().neutral().getUnits()  ){
 				if( vGeysir.getType() == UnitType.Resource_Vespene_Geyser ){
 					if( vBauer.build(aGebäudeTyp, vGeysir.getTilePosition()) ){
 						return true;
@@ -103,7 +103,7 @@ public class Gebaeude {
 			}
 		}
 		
-		for( Unit vAusgangsPunkt : BotKern.selbst().getUnits() ){
+		for( Unit vAusgangsPunkt : Kern.selbst().getUnits() ){
 			if( vAusgangsPunkt.getType().isBuilding() ){
 				
 				TilePosition vAusgangsPosition = vAusgangsPunkt.getTilePosition();
@@ -131,8 +131,8 @@ public class Gebaeude {
 	}
 	
 	private static boolean sindKeineResourcenInDerNähe( Position aPosition ){
-		for( Unit vEinheit : BotKern.spiel().getUnitsInRadius(aPosition, 3*32)){
-			if( vEinheit.getType().isMineralField() || vEinheit.getType() == UnitType.Resource_Vespene_Geyser || vEinheit.getType() == BotKern.selbst().getRace().getRefinery() ){
+		for( Unit vEinheit : Kern.spiel().getUnitsInRadius(aPosition, 3*32)){
+			if( vEinheit.getType().isMineralField() || vEinheit.getType() == UnitType.Resource_Vespene_Geyser || vEinheit.getType() == Kern.selbst().getRace().getRefinery() ){
 				return false;
 			}
 		}
@@ -143,7 +143,7 @@ public class Gebaeude {
 	public static void setzeSammelpunkt( Position aSammelpunkt ){
 		mSammelpunkt = aSammelpunkt;
 		if( mSammelpunkt != null && mSammelpunkt.isValid() ){
-			for(Unit vEinheit : BotKern.selbst().getUnits()){
+			for(Unit vEinheit : Kern.selbst().getUnits()){
 				if(vEinheit.canSetRallyPoint()){
 					vEinheit.setRallyPoint(mSammelpunkt);
 				}
@@ -161,12 +161,12 @@ public class Gebaeude {
 	}
 	public static void expandiere(){
 		
-		if( !mExpansionswunsch || BotKern.selbst().getRace().getCenter().mineralPrice() >= BotKern.selbst().minerals() || mBaumeister != null && mBaumeister.exists() && !mBaumeister.isIdle() && !mBaumeister.isGatheringMinerals() ){
+		if( !mExpansionswunsch || Kern.selbst().getRace().getCenter().mineralPrice() >= Kern.selbst().minerals() || mBaumeister != null && mBaumeister.exists() && !mBaumeister.isIdle() && !mBaumeister.isGatheringMinerals() ){
 			return;
 		}
 		
 		Unit vBasis = null;
-		for( Unit vPotenzielleBasis : BotKern.selbst().getUnits() ){
+		for( Unit vPotenzielleBasis : Kern.selbst().getUnits() ){
 			if( vPotenzielleBasis.getType().isResourceDepot() ){
 				vBasis = vPotenzielleBasis;
 				break;
@@ -180,7 +180,7 @@ public class Gebaeude {
 		BaseLocation vNaechsteMöglicheExpansion = null;
 		for( BaseLocation vPotenzielleBasis : BWTA.getBaseLocations() ){
 			boolean vFree = true;
-			for(Unit vEinheitAufPositionFürBasis : BotKern.spiel().getUnitsInRadius(vPotenzielleBasis.getPoint(), 20)){
+			for(Unit vEinheitAufPositionFürBasis : Kern.spiel().getUnitsInRadius(vPotenzielleBasis.getPoint(), 20)){
 				if( vEinheitAufPositionFürBasis.getType().isBuilding() ){
 					vFree = false;
 					break;
@@ -199,7 +199,7 @@ public class Gebaeude {
 		}
 		
 		Unit vNaechsterArbeiter = null;
-		for(Unit vArbeiter : BotKern.selbst().getUnits() ){
+		for(Unit vArbeiter : Kern.selbst().getUnits() ){
 			if( vArbeiter.getType().isWorker() &&
 				(vArbeiter.isIdle() || vArbeiter.isGatheringMinerals()) &&
 				(vNaechsterArbeiter == null ||
@@ -213,8 +213,8 @@ public class Gebaeude {
 		}
 		
 		mBaumeister = vNaechsterArbeiter;
-		if( BotKern.spiel().isExplored(vNaechsteMöglicheExpansion.getTilePosition()) ){
-			if(vNaechsterArbeiter.build(BotKern.selbst().getRace().getCenter(), vNaechsteMöglicheExpansion.getTilePosition())){
+		if( Kern.spiel().isExplored(vNaechsteMöglicheExpansion.getTilePosition()) ){
+			if(vNaechsterArbeiter.build(Kern.selbst().getRace().getCenter(), vNaechsteMöglicheExpansion.getTilePosition())){
 				mExpansionswunsch = false;
 				mBaumeister = null;
 			}
@@ -256,11 +256,11 @@ public class Gebaeude {
 	}
 	
 	public static boolean erforsche(TechType aTech){
-		for(Unit vEinheit : BotKern.selbst().getUnits()){
+		for(Unit vEinheit : Kern.selbst().getUnits()){
 			if( vEinheit.isIdle() &&
 				vEinheit.canResearch(aTech) && 
-				aTech.gasPrice() <= BotKern.selbst().gas() &&  
-				aTech.mineralPrice() <= BotKern.selbst().minerals()){
+				aTech.gasPrice() <= Kern.selbst().gas() &&  
+				aTech.mineralPrice() <= Kern.selbst().minerals()){
 				return vEinheit.research(aTech);
 			}
 		}
@@ -268,11 +268,11 @@ public class Gebaeude {
 	}
 	
 	public static boolean erforsche(UpgradeType aUpgrade){
-		for(Unit vEinheit : BotKern.selbst().getUnits()){
+		for(Unit vEinheit : Kern.selbst().getUnits()){
 			if( vEinheit.isIdle() &&
 				vEinheit.canUpgrade(aUpgrade) && 
-				aUpgrade.gasPrice() <= BotKern.selbst().gas() &&  
-				aUpgrade.mineralPrice() <= BotKern.selbst().minerals()){
+				aUpgrade.gasPrice() <= Kern.selbst().gas() &&  
+				aUpgrade.mineralPrice() <= Kern.selbst().minerals()){
 				return vEinheit.upgrade(aUpgrade);
 			}
 		}

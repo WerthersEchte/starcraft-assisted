@@ -75,8 +75,8 @@ public class EingabeVerarbeitung {
 	
 	public static String sammelpunktSetzen( String aBefehl ){
 		if( aBefehl.equalsIgnoreCase("sammelpunkt") ){
-			Position vBildschirm = BotKern.spiel().getScreenPosition();
-			Position vMauszeiger = BotKern.spiel().getMousePosition();
+			Position vBildschirm = Kern.spiel().getScreenPosition();
+			Position vMauszeiger = Kern.spiel().getMousePosition();
 			Gebaeude.setzeSammelpunkt(new Position(vBildschirm.getX() + vMauszeiger.getX(), vBildschirm.getY() + vMauszeiger.getY()));
 			return "";
 		}
@@ -85,10 +85,10 @@ public class EingabeVerarbeitung {
 	
 	public static String sammeln( String aBefehl ){
 		if( aBefehl.equalsIgnoreCase("sammeln") ){
-			Position vBildschirm = BotKern.spiel().getScreenPosition();
-			Position vMauszeiger = BotKern.spiel().getMousePosition();
+			Position vBildschirm = Kern.spiel().getScreenPosition();
+			Position vMauszeiger = Kern.spiel().getMousePosition();
 			Position vSammelpunkt = new Position(vBildschirm.getX() + vMauszeiger.getX(), vBildschirm.getY() + vMauszeiger.getY());
-			for(Unit vEinheit : BotKern.selbst().getUnits()){
+			for(Unit vEinheit : Kern.selbst().getUnits()){
 				if( vEinheit.canMove() && !vEinheit.getType().isWorker() ){
 					vEinheit.move( vSammelpunkt );
 				}
@@ -100,20 +100,20 @@ public class EingabeVerarbeitung {
 	
 	public static String angreifen( String aBefehl ){
 		if( aBefehl.equalsIgnoreCase("angreifen") ){
-			if( !BotKern.spiel().getSelectedUnits().isEmpty() &&
-				 BotKern.spiel().getSelectedUnits().get(0).getPlayer().isEnemy(BotKern.selbst()) ){
+			if( !Kern.spiel().getSelectedUnits().isEmpty() &&
+				 Kern.spiel().getSelectedUnits().get(0).getPlayer().isEnemy(Kern.selbst()) ){
 				
-				Unit vGegner = BotKern.spiel().getSelectedUnits().get(0);
-				for(Unit vEinheit : BotKern.selbst().getUnits()){
+				Unit vGegner = Kern.spiel().getSelectedUnits().get(0);
+				for(Unit vEinheit : Kern.selbst().getUnits()){
 					if( vEinheit.canAttack( vGegner ) && !vEinheit.getType().isWorker() ){
 						vEinheit.attack( vGegner );
 					}
 				}
 			} else {
-				Position vBildschirm = BotKern.spiel().getScreenPosition();
-				Position vMauszeiger = BotKern.spiel().getMousePosition();
+				Position vBildschirm = Kern.spiel().getScreenPosition();
+				Position vMauszeiger = Kern.spiel().getMousePosition();
 				Position vAnzugreifenderPunkt = new Position(vBildschirm.getX() + vMauszeiger.getX(), vBildschirm.getY() + vMauszeiger.getY());
-				for(Unit vEinheit : BotKern.selbst().getUnits()){
+				for(Unit vEinheit : Kern.selbst().getUnits()){
 					if( vEinheit.canMove() && !vEinheit.getType().isWorker() ){
 						vEinheit.attack( vAnzugreifenderPunkt );
 					}
@@ -149,6 +149,14 @@ public class EingabeVerarbeitung {
 			// Anzeige
 			Anzeige.reset();
 			Gebaeude.reset();
+			return "";
+		}
+		return aBefehl;
+	}
+
+	public static String toggleBot(String aBefehl, Kern aKern) {
+		if( aBefehl.equalsIgnoreCase("bot") ){
+			aKern.mBotActive = !aKern.mBotActive;
 			return "";
 		}
 		return aBefehl;

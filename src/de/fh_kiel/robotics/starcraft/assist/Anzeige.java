@@ -53,12 +53,12 @@ public class Anzeige {
 	}
 
 	private static void informationenAnzeigen() {
-		BotKern.spiel().setTextSize(bwapi.Text.Size.Enum.Small);
-    	BotKern.spiel().drawTextScreen(10, 10, BotKern.spiel().elapsedTime() + "s " + BotKern.selbst().getName() + "(" + BotKern.selbst().getRace() + ")");
+		Kern.spiel().setTextSize(bwapi.Text.Size.Enum.Small);
+    	Kern.spiel().drawTextScreen(10, 10, Kern.spiel().elapsedTime() + "s " + Kern.selbst().getName() + "(" + Kern.selbst().getRace() + ")");
 
     	Set<UnitType> vListeVonGebaeudenTypen = new HashSet<UnitType>();
     	Set<UnitType> vListeVonEinheitenTypen = new HashSet<UnitType>();
-    	for( Unit vEigeneEinheit : BotKern.selbst().getUnits() ){
+    	for( Unit vEigeneEinheit : Kern.selbst().getUnits() ){
     		if( vEigeneEinheit.getType().isBuilding() ){
     			vListeVonGebaeudenTypen.add(vEigeneEinheit.getType());
     		} else {
@@ -67,25 +67,25 @@ public class Anzeige {
     	}
     	
     	int vPositionsZaehler = 2;
-    	BotKern.spiel().drawTextScreen(10, 20, "Gebaeude: ");
+    	Kern.spiel().drawTextScreen(10, 20, "Gebaeude: ");
     	for( UnitType vGebaeudeTyp : vListeVonGebaeudenTypen ){
-    		BotKern.spiel().drawTextScreen(10, ++vPositionsZaehler*10, " " + String.format("% 3d", BotKern.selbst().allUnitCount(vGebaeudeTyp)));
-    		BotKern.spiel().drawTextScreen(30, vPositionsZaehler*10, "x " + vGebaeudeTyp.toString().replaceAll("Zerg_|Terran_|Protoss_", ""));
+    		Kern.spiel().drawTextScreen(10, ++vPositionsZaehler*10, " " + String.format("% 3d", Kern.selbst().allUnitCount(vGebaeudeTyp)));
+    		Kern.spiel().drawTextScreen(30, vPositionsZaehler*10, "x " + vGebaeudeTyp.toString().replaceAll("Zerg_|Terran_|Protoss_", ""));
     	}
-    	BotKern.spiel().drawTextScreen(10, ++vPositionsZaehler*10, "Einheiten: ");
+    	Kern.spiel().drawTextScreen(10, ++vPositionsZaehler*10, "Einheiten: ");
     	for( UnitType vEinheitenTyp : vListeVonEinheitenTypen ){
-    		BotKern.spiel().drawTextScreen(10, ++vPositionsZaehler*10, " " + String.format("% 3d", BotKern.selbst().allUnitCount(vEinheitenTyp)));
-    		BotKern.spiel().drawTextScreen(30, vPositionsZaehler*10, "x " + vEinheitenTyp.toString().replaceAll("Zerg_|Terran_|Protoss_", ""));
+    		Kern.spiel().drawTextScreen(10, ++vPositionsZaehler*10, " " + String.format("% 3d", Kern.selbst().allUnitCount(vEinheitenTyp)));
+    		Kern.spiel().drawTextScreen(30, vPositionsZaehler*10, "x " + vEinheitenTyp.toString().replaceAll("Zerg_|Terran_|Protoss_", ""));
     	}
     	
 	}
 	
 	private static void drawLineWhenSeen( Position aBegin, Position aEnd, Color aColor){
-		if( aBegin.getX() > BotKern.spiel().getScreenPosition().getX() && aBegin.getX() < BotKern.spiel().getScreenPosition().getX() + 640 &&
-			aBegin.getY() > BotKern.spiel().getScreenPosition().getY() && aBegin.getY() < BotKern.spiel().getScreenPosition().getY() + 370 ||
-			aEnd.getX() > BotKern.spiel().getScreenPosition().getX() && aEnd.getX() < BotKern.spiel().getScreenPosition().getX() + 640 &&
-			aEnd.getY() > BotKern.spiel().getScreenPosition().getY() && aEnd.getY() < BotKern.spiel().getScreenPosition().getY() + 370){
-			BotKern.spiel().drawLineMap(aBegin, aEnd, aColor);
+		if( aBegin.getX() > Kern.spiel().getScreenPosition().getX() && aBegin.getX() < Kern.spiel().getScreenPosition().getX() + 640 &&
+			aBegin.getY() > Kern.spiel().getScreenPosition().getY() && aBegin.getY() < Kern.spiel().getScreenPosition().getY() + 370 ||
+			aEnd.getX() > Kern.spiel().getScreenPosition().getX() && aEnd.getX() < Kern.spiel().getScreenPosition().getX() + 640 &&
+			aEnd.getY() > Kern.spiel().getScreenPosition().getY() && aEnd.getY() < Kern.spiel().getScreenPosition().getY() + 370){
+			Kern.spiel().drawLineMap(aBegin, aEnd, aColor);
 		}
 	}
 	
@@ -118,20 +118,20 @@ public class Anzeige {
 		}
 		for( Region vRegion : BWTA.getRegions() ){
 			if( sMinMaxOfRegion.containsKey(vRegion) &&
-			  !(sMinMaxOfRegion.get(vRegion).first.getX() > BotKern.spiel().getScreenPosition().getX() && sMinMaxOfRegion.get(vRegion).first.getX() < BotKern.spiel().getScreenPosition().getX() + 640 &&
-				sMinMaxOfRegion.get(vRegion).first.getY() > BotKern.spiel().getScreenPosition().getY() && sMinMaxOfRegion.get(vRegion).first.getY() < BotKern.spiel().getScreenPosition().getY() + 370 ||
+			  !(sMinMaxOfRegion.get(vRegion).first.getX() > Kern.spiel().getScreenPosition().getX() && sMinMaxOfRegion.get(vRegion).first.getX() < Kern.spiel().getScreenPosition().getX() + 640 &&
+				sMinMaxOfRegion.get(vRegion).first.getY() > Kern.spiel().getScreenPosition().getY() && sMinMaxOfRegion.get(vRegion).first.getY() < Kern.spiel().getScreenPosition().getY() + 370 ||
 				
-			    sMinMaxOfRegion.get(vRegion).first.getX() > BotKern.spiel().getScreenPosition().getX() && sMinMaxOfRegion.get(vRegion).first.getX() < BotKern.spiel().getScreenPosition().getX() + 640 &&
-				sMinMaxOfRegion.get(vRegion).second.getY() > BotKern.spiel().getScreenPosition().getY() && sMinMaxOfRegion.get(vRegion).second.getY() < BotKern.spiel().getScreenPosition().getY() + 370 ||
+			    sMinMaxOfRegion.get(vRegion).first.getX() > Kern.spiel().getScreenPosition().getX() && sMinMaxOfRegion.get(vRegion).first.getX() < Kern.spiel().getScreenPosition().getX() + 640 &&
+				sMinMaxOfRegion.get(vRegion).second.getY() > Kern.spiel().getScreenPosition().getY() && sMinMaxOfRegion.get(vRegion).second.getY() < Kern.spiel().getScreenPosition().getY() + 370 ||
 				
-			    sMinMaxOfRegion.get(vRegion).second.getX() > BotKern.spiel().getScreenPosition().getX() && sMinMaxOfRegion.get(vRegion).second.getX() < BotKern.spiel().getScreenPosition().getX() + 640 &&
-				sMinMaxOfRegion.get(vRegion).first.getY() > BotKern.spiel().getScreenPosition().getY() && sMinMaxOfRegion.get(vRegion).first.getY() < BotKern.spiel().getScreenPosition().getY() + 370 ||
+			    sMinMaxOfRegion.get(vRegion).second.getX() > Kern.spiel().getScreenPosition().getX() && sMinMaxOfRegion.get(vRegion).second.getX() < Kern.spiel().getScreenPosition().getX() + 640 &&
+				sMinMaxOfRegion.get(vRegion).first.getY() > Kern.spiel().getScreenPosition().getY() && sMinMaxOfRegion.get(vRegion).first.getY() < Kern.spiel().getScreenPosition().getY() + 370 ||
 				
-			    sMinMaxOfRegion.get(vRegion).second.getX() > BotKern.spiel().getScreenPosition().getX() && sMinMaxOfRegion.get(vRegion).second.getX() < BotKern.spiel().getScreenPosition().getX() + 640 &&
-				sMinMaxOfRegion.get(vRegion).second.getY() > BotKern.spiel().getScreenPosition().getY() && sMinMaxOfRegion.get(vRegion).second.getY() < BotKern.spiel().getScreenPosition().getY() + 370 ||
+			    sMinMaxOfRegion.get(vRegion).second.getX() > Kern.spiel().getScreenPosition().getX() && sMinMaxOfRegion.get(vRegion).second.getX() < Kern.spiel().getScreenPosition().getX() + 640 &&
+				sMinMaxOfRegion.get(vRegion).second.getY() > Kern.spiel().getScreenPosition().getY() && sMinMaxOfRegion.get(vRegion).second.getY() < Kern.spiel().getScreenPosition().getY() + 370 ||
 				
-				sMinMaxOfRegion.get(vRegion).second.getX() > BotKern.spiel().getScreenPosition().getX() && sMinMaxOfRegion.get(vRegion).first.getX() < BotKern.spiel().getScreenPosition().getX() + 640 &&
-				sMinMaxOfRegion.get(vRegion).second.getY() > BotKern.spiel().getScreenPosition().getY() && sMinMaxOfRegion.get(vRegion).first.getY() < BotKern.spiel().getScreenPosition().getY() + 370)){
+				sMinMaxOfRegion.get(vRegion).second.getX() > Kern.spiel().getScreenPosition().getX() && sMinMaxOfRegion.get(vRegion).first.getX() < Kern.spiel().getScreenPosition().getX() + 640 &&
+				sMinMaxOfRegion.get(vRegion).second.getY() > Kern.spiel().getScreenPosition().getY() && sMinMaxOfRegion.get(vRegion).first.getY() < Kern.spiel().getScreenPosition().getY() + 370)){
 				continue;
 			}
 			Position vVorher = vRegion.getPolygon().getPoints().get(vRegion.getPolygon().getPoints().size()-1);
@@ -143,17 +143,17 @@ public class Anzeige {
 		}
 		
 		for( BaseLocation vBaseLocation : BWTA.getBaseLocations() ){
-			if( !( vBaseLocation.getX() > BotKern.spiel().getScreenPosition().getX() && vBaseLocation.getX() < BotKern.spiel().getScreenPosition().getX() + 640 &&
-				   vBaseLocation.getY() > BotKern.spiel().getScreenPosition().getY() && vBaseLocation.getY() < BotKern.spiel().getScreenPosition().getY() + 370)){
+			if( !( vBaseLocation.getX() > Kern.spiel().getScreenPosition().getX() && vBaseLocation.getX() < Kern.spiel().getScreenPosition().getX() + 640 &&
+				   vBaseLocation.getY() > Kern.spiel().getScreenPosition().getY() && vBaseLocation.getY() < Kern.spiel().getScreenPosition().getY() + 370)){
 				continue;
 			}
 			TilePosition vBasisKachel = vBaseLocation.getTilePosition();
 			
 			if( vBaseLocation.isStartLocation() ){
-				BotKern.spiel().drawBoxMap(
+				Kern.spiel().drawBoxMap(
 					vBasisKachel.toPosition().getX(), vBasisKachel.toPosition().getY(), vBasisKachel.toPosition().getX() + TilePosition.SIZE_IN_PIXELS*4, vBasisKachel.toPosition().getY() + TilePosition.SIZE_IN_PIXELS*3, Color.Orange);
 			} else {
-				BotKern.spiel().drawBoxMap(
+				Kern.spiel().drawBoxMap(
 						vBasisKachel.toPosition().getX(), vBasisKachel.toPosition().getY(), vBasisKachel.toPosition().getX() + TilePosition.SIZE_IN_PIXELS*4, vBasisKachel.toPosition().getY() + TilePosition.SIZE_IN_PIXELS*3, Color.Purple);
 			}
 		}
@@ -161,8 +161,8 @@ public class Anzeige {
 
 	private static void sammelpunktAnzeigen(){
 		if( Gebaeude.holeSammelpunkt() != null && Gebaeude.holeSammelpunkt().isValid() ){
-			BotKern.spiel().drawCircleMap(Gebaeude.holeSammelpunkt(), 10, Color.White);
-			BotKern.spiel().drawCircleMap(Gebaeude.holeSammelpunkt(), 20, Color.White);
+			Kern.spiel().drawCircleMap(Gebaeude.holeSammelpunkt(), 10, Color.White);
+			Kern.spiel().drawCircleMap(Gebaeude.holeSammelpunkt(), 20, Color.White);
 		}
 	}
 
@@ -174,9 +174,9 @@ public class Anzeige {
     	try {
 			for (Field vMember : UnitType.class.getDeclaredFields()) {
 			    if( Modifier.isStatic(vMember.getModifiers()) && 
-			    	vMember.getName().startsWith("Zerg_") && BotKern.selbst().getRace() == Race.Zerg || 
-			    	vMember.getName().startsWith("Terran_") && BotKern.selbst().getRace() == Race.Terran || 
-			    	vMember.getName().startsWith("Protoss_") && BotKern.selbst().getRace() == Race.Protoss
+			    	vMember.getName().startsWith("Zerg_") && Kern.selbst().getRace() == Race.Zerg || 
+			    	vMember.getName().startsWith("Terran_") && Kern.selbst().getRace() == Race.Terran || 
+			    	vMember.getName().startsWith("Protoss_") && Kern.selbst().getRace() == Race.Protoss
 			    	) {
 						
 			    	sAllUnits.add((UnitType) vMember.get(UnitType.AllUnits));
@@ -185,7 +185,7 @@ public class Anzeige {
 			for (Field vMember : UpgradeType.class.getDeclaredFields()) {
 		    	if( Modifier.isStatic(vMember.getModifiers()) &&
 			    	Modifier.isPublic(vMember.getModifiers()) &&
-			    	((UpgradeType) vMember.get(UpgradeType.None)).getRace() == BotKern.selbst().getRace()){
+			    	((UpgradeType) vMember.get(UpgradeType.None)).getRace() == Kern.selbst().getRace()){
 			    	
 		    		sAllUpgrades.add((UpgradeType) vMember.get(UpgradeType.None));
 			    } 
@@ -194,7 +194,7 @@ public class Anzeige {
 	    	for (Field vMember : TechType.class.getDeclaredFields()) {
 	    		if( Modifier.isStatic(vMember.getModifiers()) &&
 				    Modifier.isPublic(vMember.getModifiers()) &&
-			    	((TechType) vMember.get(TechType.None)).getRace() == BotKern.selbst().getRace()){
+			    	((TechType) vMember.get(TechType.None)).getRace() == Kern.selbst().getRace()){
 
 	    			sAllTechs.add((TechType) vMember.get(TechType.None));
 			    } 
@@ -209,24 +209,24 @@ public class Anzeige {
 			buildLists();
 		}
 		
-		BotKern.spiel().setTextSize(bwapi.Text.Size.Enum.Small);
+		Kern.spiel().setTextSize(bwapi.Text.Size.Enum.Small);
 
 		try {
 	    	int vPositionsZaehler = 1;
 
-	    	BotKern.spiel().drawTextScreen(535, ++vPositionsZaehler * 10, "Moegliche" );
-	    	BotKern.spiel().drawTextScreen(540, ++vPositionsZaehler * 10, "Gebaeude/Einheiten:" );
+	    	Kern.spiel().drawTextScreen(535, ++vPositionsZaehler * 10, "Moegliche" );
+	    	Kern.spiel().drawTextScreen(540, ++vPositionsZaehler * 10, "Gebaeude/Einheiten:" );
 			for (UnitType vUnitType : sAllUnits) {
-				if( BotKern.selbst().allUnitCount(vUnitType.whatBuilds().first) == 0){
+				if( Kern.selbst().allUnitCount(vUnitType.whatBuilds().first) == 0){
 					continue;
 				}
-		    	for( Unit vBuilder : BotKern.selbst().getUnits() ){
+		    	for( Unit vBuilder : Kern.selbst().getUnits() ){
 					if( vBuilder.getType() == vUnitType.whatBuilds().first ){
 						if( vBuilder.canBuild( vUnitType ) ||
 							vBuilder.canTrain( vUnitType ) ||
 							vBuilder.canMorph( vUnitType ) ){
 							
-					    	BotKern.spiel().drawTextScreen(550, ++vPositionsZaehler * 10, vUnitType.toString().replaceAll("Zerg_|Terran_|Protoss_", "").toLowerCase() );
+					    	Kern.spiel().drawTextScreen(550, ++vPositionsZaehler * 10, vUnitType.toString().replaceAll("Zerg_|Terran_|Protoss_", "").toLowerCase() );
 					    	break;
 						}
 					}
@@ -235,15 +235,15 @@ public class Anzeige {
 			
 			
 			++vPositionsZaehler;
-	    	BotKern.spiel().drawTextScreen(540, ++vPositionsZaehler * 10, "Forschung:" );
+	    	Kern.spiel().drawTextScreen(540, ++vPositionsZaehler * 10, "Forschung:" );
 			for (UpgradeType vUpgrade : sAllUpgrades) {
-				if( BotKern.selbst().allUnitCount(vUpgrade.whatUpgrades()) == 0){
+				if( Kern.selbst().allUnitCount(vUpgrade.whatUpgrades()) == 0){
 					continue;
 				}
-		    	for( Unit vBuilder : BotKern.selbst().getUnits() ){
+		    	for( Unit vBuilder : Kern.selbst().getUnits() ){
 					if( vBuilder.getType() == vUpgrade.whatUpgrades() ){
 						if( vBuilder.canUpgrade( vUpgrade ) ) {
-							BotKern.spiel().drawTextScreen(550, ++vPositionsZaehler * 10, vUpgrade.toString().replaceAll("Zerg_|Terran_|Protoss_", "").toLowerCase() );
+							Kern.spiel().drawTextScreen(550, ++vPositionsZaehler * 10, vUpgrade.toString().replaceAll("Zerg_|Terran_|Protoss_", "").toLowerCase() );
 							break;
 						}
 					}
@@ -251,14 +251,14 @@ public class Anzeige {
 			}
 	    	
 	    	for (TechType vTech : sAllTechs) {
-				if( BotKern.selbst().hasResearched(vTech) ||
-					BotKern.selbst().allUnitCount(vTech.whatResearches()) == 0){
+				if( Kern.selbst().hasResearched(vTech) ||
+					Kern.selbst().allUnitCount(vTech.whatResearches()) == 0){
 					continue;
 				}
-		    	for( Unit vBuilder : BotKern.selbst().getUnits() ){
+		    	for( Unit vBuilder : Kern.selbst().getUnits() ){
 					if( vBuilder.getType() == vTech.whatResearches() ){
 						if( vBuilder.canResearch(vTech) ) {
-							BotKern.spiel().drawTextScreen(550, ++vPositionsZaehler * 10, vTech.toString().replaceAll("Zerg_|Terran_|Protoss_", "").toLowerCase() );
+							Kern.spiel().drawTextScreen(550, ++vPositionsZaehler * 10, vTech.toString().replaceAll("Zerg_|Terran_|Protoss_", "").toLowerCase() );
 							break;
 						}
 					}
