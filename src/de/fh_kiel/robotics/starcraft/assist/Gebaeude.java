@@ -112,19 +112,23 @@ public class Gebaeude {
 				
 				TilePosition vAusgangsPosition = vAusgangsPunkt.getTilePosition();
 				TilePosition vZielPosition = new TilePosition(vAusgangsPosition.getX(), vAusgangsPosition.getY()-1-aGebäudeTyp.tileHeight());
-				if( sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
+				if( istPositionFrei(vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
+					zukünftigesGebäudeAn( aGebäudeTyp, vZielPosition);
 					return true;
 				}
-				vZielPosition = new TilePosition(vAusgangsPosition.getX(), vAusgangsPosition.getY()+vAusgangsPunkt.getType().tileHeight()+2);
-				if( sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
+				vZielPosition = new TilePosition(vAusgangsPosition.getX(), vAusgangsPosition.getY()+vAusgangsPunkt.getType().tileHeight()+1);
+				if( istPositionFrei(vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
+					zukünftigesGebäudeAn( aGebäudeTyp, vZielPosition);
 					return true;
 				}
 				vZielPosition = new TilePosition(vAusgangsPosition.getX()-1-aGebäudeTyp.tileWidth(), vAusgangsPosition.getY());
-				if( sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
+				if( istPositionFrei(vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
+					zukünftigesGebäudeAn( aGebäudeTyp, vZielPosition);
 					return true;
 				}
-				vZielPosition = new TilePosition(vAusgangsPosition.getX()+vAusgangsPunkt.getType().tileWidth()+2, vAusgangsPosition.getY());
-				if( sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
+				vZielPosition = new TilePosition(vAusgangsPosition.getX()+vAusgangsPunkt.getType().tileWidth()+1, vAusgangsPosition.getY());
+				if( istPositionFrei(vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
+					zukünftigesGebäudeAn( aGebäudeTyp, vZielPosition);
 					return true;
 				}
 				
@@ -141,6 +145,30 @@ public class Gebaeude {
 			}
 		}
 		return true;
+	}
+	
+	private static Map<TilePosition, Integer> sPositionMitZukünftigemGebäude = new HashMap<>();
+	
+	private static boolean istPositionFrei( TilePosition aPosition ){
+		for( TilePosition vPosition : sPositionMitZukünftigemGebäude.keySet() ){
+			if( sPositionMitZukünftigemGebäude.get(vPosition) + 500 < Kern.spiel().getFrameCount() ){
+				sPositionMitZukünftigemGebäude.remove(vPosition);
+			}
+		}
+		
+		return !sPositionMitZukünftigemGebäude.keySet().stream().filter(position->Helfer.istGleich(position, aPosition)).findAny().isPresent();
+	}
+	
+	private static void zukünftigesGebäudeAn( UnitType aGebäude, TilePosition aPosition ){
+		if( !aGebäude.isBuilding() || !aPosition.isValid()){
+			return;
+		}
+		
+		for( int vX = 0; vX < aGebäude.tileWidth(); ++vX){
+			for( int vY = 0; vY < aGebäude.tileHeight(); ++vY){
+				sPositionMitZukünftigemGebäude.put(new TilePosition(vX + aPosition.getX(), vY + aPosition.getY()), Kern.spiel().getFrameCount());
+			}
+		}
 	}
 	
 	private static Position mSammelpunkt = Position.Unknown; 
