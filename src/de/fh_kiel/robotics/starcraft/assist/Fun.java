@@ -23,6 +23,7 @@ public class Fun {
 				sGebäude.remove(vPosition);
 			}
 		}
+		System.out.println(sGebäude.size() + " " + sGebäude);
 		
 		for( TilePosition vPosition : sGebäude.keySet() ){
 			Unit vBauer = null;
@@ -69,6 +70,46 @@ public class Fun {
 		for( int[] vPosition : vPositions){
 			sGebäude.put(new TilePosition(vPosition[0]*2 + Kern.spiel().getScreenPosition().toTilePosition().getX() + Kern.spiel().getMousePosition().toTilePosition().getX(), vPosition[1]*2 + Kern.spiel().getScreenPosition().toTilePosition().getY() + Kern.spiel().getMousePosition().toTilePosition().getY()),
 					vGebäudeTyp);
+		}
+		
+	}
+	
+	public static void schreiben( String aText ){
+		UnitType vGebäudeTyp = UnitType.None;
+		if( Kern.selbst().getRace() == Race.Protoss ){
+			vGebäudeTyp = UnitType.Protoss_Pylon;
+		} else if( Kern.selbst().getRace() == Race.Zerg ){
+			vGebäudeTyp = UnitType.Zerg_Creep_Colony;
+			sGebäude.put(new TilePosition( -3 + Kern.spiel().getScreenPosition().toTilePosition().getX() + Kern.spiel().getMousePosition().toTilePosition().getX(), +1 + Kern.spiel().getScreenPosition().toTilePosition().getY() + Kern.spiel().getMousePosition().toTilePosition().getY()),
+					UnitType.Zerg_Hatchery);
+			Gebaeude.braucheEinheiten(UnitType.Zerg_Drone, 17);
+		} else if( Kern.selbst().getRace() == Race.Terran ){
+			vGebäudeTyp = UnitType.Terran_Missile_Turret;
+			if( Kern.selbst().allUnitCount(UnitType.Terran_Engineering_Bay) <= 0){
+				Gebaeude.braucheEinheiten(UnitType.Terran_Engineering_Bay, 1);
+			}
+		}
+		
+		int vSize=0;
+		for( char vBuchstabe : aText.toCharArray() ){
+			for( int[] vPosition : Alphabet.valueOf("" + vBuchstabe).getImage() ){
+				sGebäude.put(new TilePosition(vPosition[0]*2 + vSize + Kern.spiel().getScreenPosition().toTilePosition().getX() + Kern.spiel().getMousePosition().toTilePosition().getX(), vPosition[1]*2 + Kern.spiel().getScreenPosition().toTilePosition().getY() + Kern.spiel().getMousePosition().toTilePosition().getY()),
+						vGebäudeTyp);
+			}
+			vSize+=8;
+		}
+	}
+	
+	enum Alphabet{
+		A( new int[][]{{0,0},{1,0},{2,0},{0,1},{2,1},{0,2},{1,2},{2,2},{0,3},{2,3},{0,4},{2,4}} );
+		
+		int[][] mPositions;
+		private Alphabet( int[][] aPositions ) {
+			mPositions = aPositions;
+		}
+		
+		int[][] getImage(){
+			return mPositions;
 		}
 		
 	}
