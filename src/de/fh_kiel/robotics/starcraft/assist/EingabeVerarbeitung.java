@@ -167,6 +167,10 @@ public class EingabeVerarbeitung {
 			Fun.herz();
 			return "";
 		}
+		if( aBefehl.startsWith("write ") ){
+			Fun.schreiben(aBefehl.replace("write ", ""));
+			return "";
+		}
 		return aBefehl;
 	}
 
