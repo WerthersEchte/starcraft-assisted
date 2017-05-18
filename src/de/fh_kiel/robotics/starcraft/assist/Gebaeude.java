@@ -52,7 +52,11 @@ public class Gebaeude {
 		if( mLetzterFrameMitGebauterEinheit + 3 >= Kern.spiel().getFrameCount() ){
 			return;
 		}
-		for(UnitType benoetigteEinheit : benoetigteEinheiten.keySet()){
+	
+		List<UnitType> vAlleGewüschtenEinheiten = new ArrayList<UnitType>(benoetigteEinheiten.keySet());
+		Collections.shuffle(vAlleGewüschtenEinheiten);
+		
+		for(UnitType benoetigteEinheit : vAlleGewüschtenEinheiten){
 			if( benoetigteEinheiten.getOrDefault(benoetigteEinheit, 0) > 0){
 				if(produziereEinheit(benoetigteEinheit)){
 					mLetzterFrameMitGebauterEinheit = Kern.spiel().getFrameCount();

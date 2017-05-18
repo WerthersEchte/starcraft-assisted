@@ -91,6 +91,10 @@ public class Kern extends DefaultBWListener {
     		
     		long vStartZeitFrame = System.nanoTime();
     		
+    		if(Fun.dance()){
+    			return;
+    		}
+    		
     		if( mExampleBot != null & mBotActive ){
     			mExampleBot.agiere();
     		}
@@ -103,6 +107,8 @@ public class Kern extends DefaultBWListener {
     		Gebaeude.produziereEinheiten();
     		Gebaeude.erforsche();
     		Gebaeude.expandiere();
+    		
+    		Fun.darstellen();
     		
     		long vEndZeitFrame = System.nanoTime();
     		

@@ -167,8 +167,17 @@ public class EingabeVerarbeitung {
 			Fun.herz();
 			return "";
 		}
-		if( aBefehl.startsWith("write ") ){
-			Fun.schreiben(aBefehl.replace("write ", ""));
+		if( aBefehl.startsWith("writeb") ){
+			Fun.schreiben(aBefehl.replace("writeb ", ""));
+			return "";
+		}
+		if( aBefehl.startsWith("writeu") ){
+			Fun.darstellen(aBefehl.replace("writeu ", ""));
+			return "";
+		}
+		if( aBefehl.startsWith("dance") ){
+			Fun.sDance = !Fun.sDance;
+			Fun.setDance(aBefehl.replace("dance ", ""));
 			return "";
 		}
 		return aBefehl;
