@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import bwapi.Position;
+import bwapi.Race;
 import bwapi.TechType;
-import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
@@ -85,22 +85,34 @@ public class Gebaeude {
 	
 	private static Map<UnitType, Integer> sGebäudeImBau = new HashMap<>();
 	public static boolean baueGebäude( UnitType aGebäudeTyp ){
-		if( !aGebäudeTyp.isBuilding() || sGebäudeImBau.containsKey(aGebäudeTyp) && sGebäudeImBau.get(aGebäudeTyp) + 500 > Kern.spiel().getFrameCount() || aGebäudeTyp.mineralPrice() > Kern.selbst().minerals() || aGebäudeTyp.gasPrice() > Kern.selbst().gas() ){
+		if( !aGebäudeTyp.isBuilding() || 
+			sGebäudeImBau.containsKey(aGebäudeTyp) && sGebäudeImBau.get(aGebäudeTyp) + 500 > Kern.spiel().getFrameCount() || 
+			aGebäudeTyp.mineralPrice() > Kern.selbst().minerals() || 
+			aGebäudeTyp.gasPrice() > Kern.selbst().gas() ){
 			return false;
 		}
 		
 		Unit vBauer = null;
 		for( Unit vPotenzellerBauer : Kern.selbst().getUnits() ){
-			if( vPotenzellerBauer.getType() == aGebäudeTyp.whatBuilds().first && (vPotenzellerBauer.isIdle() || vPotenzellerBauer.isGatheringMinerals()) ){
+			if( vPotenzellerBauer.getType() == aGebäudeTyp.whatBuilds().first && (vPotenzellerBauer.isIdle() || vPotenzellerBauer.isGatheringMinerals()) && vPotenzellerBauer.getAddon() == null ){
 				vBauer = vPotenzellerBauer;
 				break;
 			}
 		}
-		
+
 		if( vBauer == null ){
 			return false;
 		}
 		
+		if( vBauer.getType().isBuilding() && vBauer.getType().getRace() == Race.Terran && !vBauer.isFlying() ){
+			if( vBauer.build(aGebäudeTyp, new TilePosition(4, 1).add(vBauer.getTilePosition())) ){
+				vBauer.lift();
+				return true;
+				
+			}
+			vBauer.lift();
+			return false;
+		}
 		
 		if( aGebäudeTyp.isRefinery() ){
 			for( Unit vGeysir : Kern.spiel().neutral().getUnits()  ){
@@ -118,7 +130,7 @@ public class Gebaeude {
 		for( Unit vAusgangsPunkt : vAlleEigenenEinheiten ){
 			if( vAusgangsPunkt.getType().isBuilding() ){
 				
-				TilePosition vAusgangsPosition = vAusgangsPunkt.getTilePosition();
+				bwapi.TilePosition vAusgangsPosition = vAusgangsPunkt.getTilePosition();
 				TilePosition vZielPosition = new TilePosition(vAusgangsPosition.getX(), vAusgangsPosition.getY()-1-aGebäudeTyp.tileHeight());
 				if( istPositionFrei(vZielPosition) && sindKeineResourcenInDerNähe(vZielPosition.toPosition()) && vBauer.build(aGebäudeTyp, vZielPosition) ){
 					zukünftigesGebäudeAn( aGebäudeTyp, vZielPosition);
